@@ -6,11 +6,18 @@ int perc2=0;
 int ora1=0;
 int ora2=0;
 int szamok[10]={123,48,103,118,60,94,95,112,127,126};
+int szamok2[10][2]={{63,0},{6,0},{27,4},{15,4},{44,4},{45,4},{61,4},{7,0},{63,4},{47,4}};
 int kijelzo=0;
 int szamol2=0;
 int szamolvalamit=0;
-int KI[4] = {128,64,32,16};
+int KI[4] = {32,16,8,4};
 void main() {
+  ANSEL = 0;
+  ANSELH = 0;
+  CM1CON0 = 0;
+  CM2CON0 = 0;
+  CCP1CON = 0;
+  CCP2CON = 0;
   T1CON.TMR1CS=1; //external clock , Kulso orajel
   T1CON.T1CKPS1=0;// elooszto (prescaler)
   T1CON.T1CKPS0=0;// elooszto (prescaler)
@@ -21,9 +28,11 @@ void main() {
   INTCON.GIE =1;// interrupt engedelyezese
   INTCON.PEIE=1;// Peripheral interrupt engedelyezese
   INTCON.RBIE=0;
-  TRISD = 0;
-  TRISB = 0b00001111; // nem lehet az egeszet , mivel problemat okoz
-  PORTD = 0;
+  TRISA = 0;
+  TRISC = 0;
+  PORTC = 0;
+  TRISB = 0b11000011; // nem lehet az egeszet , mivel problemat okoz
+  PORTA = 0;
   TMR1H = 0x80;
   TMR1L = 0;
   while(1){
@@ -59,27 +68,32 @@ void main() {
                       }
 
            if(szamlalo % 12 ==0){
-                       PORTD = 0;
+                       PORTA = 0;
+                       PORTC = 0;
                        kijelzo++;
                        if(kijelzo<4){
                                      PORTB = KI[kijelzo];
                                      }
-                       if(kijelzo==4){
+                       if(kijelzo==3){
                                       kijelzo=-1;
                                       }
 
                                 }
             if(kijelzo==0){
-                           PORTD = szamok[ora1];
+                           PORTA = szamok2[ora1][0];
+                           PORTC = szamok2[ora1][1];
                            }
             if(kijelzo==1){
-                           PORTD = szamok[ora2];
+                           PORTA = szamok2[ora2][0];
+                           PORTC = szamok2[ora2][1];
                            }
             if(kijelzo==2){
-                           PORTD = szamok[perc1];
+                           PORTA = szamok2[perc1][0];
+                           PORTC = szamok2[perc1][1];
                            }
             if(kijelzo==3){
-                           PORTD = szamok[perc2];
+                           PORTA = szamok2[perc2][0];
+                           PORTC = szamok2[perc2][1];
                            }
 }
 }
